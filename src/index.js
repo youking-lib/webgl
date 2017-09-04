@@ -5,6 +5,7 @@ function WebRender (container, options) {
 
   this.scene = null
   this.camera = null
+  this.renderer = null
 
   this.init(options)
   this.initComponents()
@@ -14,16 +15,29 @@ WebRender.prototype.render = function () {
   this._render()
 }
 
+WebRender.prototype.addMember = function (member) {
+  this.scene.add(member)
+}
+
 WebRender.prototype._render = function () {
   requestAnimationFrame(() => this._render())
 
   this.renderer.render(this.scene, this.camera)
 }
 
+WebRender.prototype.handleResize = function (w, h) {
+  this.renderer.setSize(w, h)    
+  this.camera.aspect = w / h          
+  this.camera.updateProjectionMatrix()
+}
+
 WebRender.prototype.initComponents = function () {
   const { basic } = this.$options
   // 场景
   this.scene = new THREE.Scene()
+
+  // 在场景中添加雾的效果；样式上使用和背景一样的颜色
+  this.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950)
 
   // 照相机
   const { fov, aspect, near, far, position } = basic.camera
@@ -36,10 +50,19 @@ WebRender.prototype.initComponents = function () {
 
   // 渲染器
   const { size, clearColor } = basic.renderer
-  const renderer = this.renderer = new THREE.WebGLRenderer()
+  const renderer = this.renderer = new THREE.WebGLRenderer({ 
+    // 在 css 中设置背景色透明显示渐变色
+    alpha: true, 
+    // 开启抗锯齿，但这样会降低性能。
+    // 不过，由于我们的项目基于低多边形的，那还好 :) 
+    antialias: true 
+  })
 
   renderer.setClearColor(clearColor)
   renderer.setSize(size.w, size.h)
+
+  // 打开渲染器的阴影地图
+  renderer.shadowMap.enabled = true; 
 
   this.$container.appendChild(renderer.domElement)
 }
