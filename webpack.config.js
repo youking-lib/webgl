@@ -31,6 +31,11 @@ module.exports = {
     publicPath: '',
     filename: '[name].js'
   },
+  resolve: {
+    alias: {
+      src: path.join(__dirname, 'src')
+    }
+  },
   plugins: [
     ...htmlPlugins,
     new webpack.optimize.CommonsChunkPlugin({
