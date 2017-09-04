@@ -75,7 +75,6 @@ sphere.position.x = 20
 sphere.position.y = 4
 sphere.position.z = 2
 
-
 scene.add(sphere)
 
 // 添加光源
@@ -85,6 +84,9 @@ spotLight.position.set(-40, 60, -10)
 spotLight.castShadow = true
 
 scene.add(spotLight)
+
+// 雾化
+scene.fog = new THREE.Fog(0xffffff, 0.015, 100)
 
 // 指定相机位置 -> 悬挂在场景的上方
 camera.position.x = -30
