@@ -1,4 +1,4 @@
-const WebRender = require('src/index.js')
+const WebRender = require('src/index.js').WebRender
 
 const renderer = new WebRender('#webgl-output')
 
